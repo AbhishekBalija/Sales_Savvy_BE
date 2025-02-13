@@ -1,10 +1,13 @@
 package com.example.demo.entities;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import jakarta.persistence.CascadeType;
 //import java.util.ArrayList;
 //import java.util.List;
 //import jakarta.persistence.CascadeType;
@@ -15,6 +18,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 //import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -47,8 +52,11 @@ public class User {
 	@UpdateTimestamp
 	private LocalDateTime updated_at;
 	
-//	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-//	List<CartItems> cartitems = new ArrayList<>();
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	List<CartItem> cartitems = new ArrayList<>();
+	
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private ForgotPassword forgotPassword;
 	
 	public User() {
 		// TODO Auto-generated constructor stub
@@ -64,7 +72,7 @@ public class User {
 		this.role = role;
 		this.created_at = created_at;
 		this.updated_at = updated_at;
-//		this.cartitems = cartitems;
+
 	}
 
 	public User(String username, String email, String password, Role role, LocalDateTime created_at,
@@ -76,7 +84,6 @@ public class User {
 		this.role = role;
 		this.created_at = created_at;
 		this.updated_at = updated_at;
-//		this.cartitems = cartitems;
 	}
 
 	public User(String username, String email, String password, Role role) {
@@ -143,13 +150,5 @@ public class User {
 		this.updated_at = updated_at;
 	}
 
-//	public List<CartItems> getCartitems() {
-//		return cartitems;
-//	}
-//
-//	public void setCartitems(List<CartItems> cartitems) {
-//		this.cartitems = cartitems;
-//	}
-	
 	
 }

@@ -29,7 +29,9 @@ public class AuthenticationFilter implements Filter {
     private static final String ALLOWED_ORIGIN = "http://localhost:5173";;
     private static final String[] UNAUTHENTICATED_PATHS = {
         "/api/users/register",
-        "/api/users/login"
+        "/api/users/login",
+        "/api/forgotPassword/",
+
     };
 
     public AuthenticationFilter(AuthService authService, UserRepository userRepository) {
@@ -69,9 +71,17 @@ public class AuthenticationFilter implements Filter {
             chain.doFilter(request, response);
             return;
         }
+        
+        // Allow unauthenticated paths (wildcard match)
+        if (Arrays.stream(UNAUTHENTICATED_PATHS)
+                  .anyMatch(path -> requestURI.startsWith(path))) {
+            chain.doFilter(request, response);
+            return;
+        }
 
         // Handle preflight (OPTIONS) requests
         if (httpRequest.getMethod().equalsIgnoreCase("OPTIONS")) {
+            chain.doFilter(request, response); // Propagate OPTIONS requests
             return;
         }
 
